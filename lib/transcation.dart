@@ -8,8 +8,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class Transcation {
-  static const MethodChannel _channel =
-      const MethodChannel('transcation');
+  static const MethodChannel _channel = const MethodChannel('transcation');
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
