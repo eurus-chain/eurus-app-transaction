@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:transcation/transcation.dart';
+import 'package:transaction/transaction.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('transcation');
+  const MethodChannel channel = MethodChannel('transaction');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -18,6 +18,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await Transcation.platformVersion, '42');
+    expect(await Transaction.platformVersion, '42');
   });
 }

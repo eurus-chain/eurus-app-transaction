@@ -1,6 +1,6 @@
-# transcation_example
+# transaction_example
 
-Demonstrates how to use the transcation plugin.
+Demonstrates how to use the transaction plugin.
 
 ## Getting Started
 

@@ -1,4 +1,4 @@
-package com.example.transcation_example;
+package com.example.transaction_example;
 
 import io.flutter.embedding.android.FlutterActivity;
 
