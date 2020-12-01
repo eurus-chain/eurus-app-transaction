@@ -41,3 +41,16 @@ web3dart.sendETHTransaction(amount: EtherAmount.fromUnitAndValue(EtherUnit.finne
 web3dart.sendERC20Transaction(contractAddress: '0x7e0480ca9fd50eb7a3855cf53c347a1b4d6a2ff5',amount: BigInt.from(1000000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
 
 ```
+
+## get TopErc20CoinPrice()
+
+```dart
+import 'package:transaction/model/coinPrice.dart';
+import 'package:transaction/transaction.dart';
+import 'dart:async';
+
+/// getTopErc20CoinPrice
+CoinPriceList coinPrice = await transaction.getTopErc20CoinPrice();
+    print("result:$coinPrice");
+
+```

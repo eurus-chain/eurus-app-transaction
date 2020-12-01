@@ -1,3 +1,5 @@
+import 'package:transaction/model/coinPrice.dart';
+import 'package:transaction/transaction.dart';
 import 'package:transaction/web3dart.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -21,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   }
 
 
-  void _incrementCounter() {
+  Future<void> _incrementCounter() async {
     web3dart.getOwnerAddress();
     web3dart.setUpPrivateKey(privateKey:'d1bdc683fbeb9fa0b4ceb26adb39eaffb21b16891ea28e4cf1bc3118fdd39295');
     Future.delayed(Duration(milliseconds: 1000), () {
@@ -32,6 +34,9 @@ class _MyAppState extends State<MyApp> {
       web3dart.getAddressDetail();
       web3dart.sendERC20Transaction(contractAddress: '0x7e0480ca9fd50eb7a3855cf53c347a1b4d6a2ff5',amount: BigInt.from(1000000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
     });
+
+    CoinPriceList coinPrice = await transaction.getTopErc20CoinPrice();
+    print("result:$coinPrice");
     setState(() {
       _counter++;
     });

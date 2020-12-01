@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:transaction/transaction.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('transaction');
@@ -17,7 +16,4 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await Transaction.platformVersion, '42');
-  });
 }
