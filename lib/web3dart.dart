@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
-export 'package:web3dart/web3dart.dart';
 
 class Web3dart {
   static final Web3dart _instance = Web3dart._internal();

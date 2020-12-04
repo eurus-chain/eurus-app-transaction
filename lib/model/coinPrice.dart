@@ -1,3 +1,4 @@
+/// CoinPriceList Class
 class CoinPriceList {
   List<CoinPrice> coinPriceList;
 
@@ -6,21 +7,22 @@ class CoinPriceList {
   }
 }
 
+/// CoinPrice Class
 class CoinPrice {
   String id;
   String symbol;
   String name;
   String image;
   double currentPrice;
-  int marketCap;
-  int marketCapRank;
-  int fullyDilutedValuation;
-  int totalVolume;
+  double marketCap;
+  double marketCapRank;
+  double fullyDilutedValuation;
+  double totalVolume;
   double high24h;
   double low24h;
   double priceChange24h;
   double priceChangePercentage24h;
-  int marketCapChange24h;
+  double marketCapChange24h;
   double marketCapChangePercentage24h;
   double circulatingSupply;
   double totalSupply;
@@ -31,9 +33,9 @@ class CoinPrice {
   double atl;
   double atlChangePercentage;
   String atlDate;
-  String roi;
   String lastUpdated;
 
+  /// init CoinPrice
   CoinPrice(
       {this.id,
       this.symbol,
@@ -59,9 +61,9 @@ class CoinPrice {
       this.atl,
       this.atlChangePercentage,
       this.atlDate,
-      this.roi,
       this.lastUpdated});
 
+  /// fromJsons to List<CoinPrice>
   static List<CoinPrice> fromJsons(List<dynamic> jsons) {
     // MyLog.d('UserAsset.fromJsons');
     List<CoinPrice> assets = new List<CoinPrice>();
@@ -74,34 +76,37 @@ class CoinPrice {
     return assets;
   }
 
+  /// from json to CoinPrice Class
   CoinPrice.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     symbol = json['symbol'];
     name = json['name'];
     image = json['image'];
     currentPrice = json['current_price']?.toDouble();
-    marketCap = json['market_cap'];
-    marketCapRank = json['market_cap_rank'];
-    fullyDilutedValuation = json['fully_diluted_valuation'];
-    totalVolume = json['total_volume'];
+    marketCap = json['market_cap']?.toDouble();
+    marketCapRank = json['market_cap_rank']?.toDouble();
+    fullyDilutedValuation = json['fully_diluted_valuation']?.toDouble();
+    totalVolume = json['total_volume']?.toDouble();
     high24h = json['high_24h']?.toDouble();
     low24h = json['low_24h']?.toDouble();
-    priceChange24h = json['price_change_24h'];
-    priceChangePercentage24h = json['price_change_percentage_24h'];
-    marketCapChange24h = json['market_cap_change_24h'];
-    marketCapChangePercentage24h = json['market_cap_change_percentage_24h'];
+    priceChange24h = json['price_change_24h']?.toDouble();
+    priceChangePercentage24h = json['price_change_percentage_24h']?.toDouble();
+    marketCapChange24h = json['market_cap_change_24h']?.toDouble();
+    marketCapChangePercentage24h =
+        json['market_cap_change_percentage_24h']?.toDouble();
     circulatingSupply = json['circulating_supply']?.toDouble();
     totalSupply = json['total_supply']?.toDouble();
     maxSupply = json['max_supply']?.toDouble();
     ath = json['ath']?.toDouble();
-    athChangePercentage = json['ath_change_percentage'];
+    athChangePercentage = json['ath_change_percentage']?.toDouble();
     athDate = json['ath_date'];
-    atl = json['atl'];
-    atlChangePercentage = json['atl_change_percentage'];
+    atl = json['atl']?.toDouble();
+    atlChangePercentage = json['atl_change_percentage']?.toDouble();
     atlDate = json['atl_date'];
     lastUpdated = json['last_updated'];
   }
 
+  ///  CoinPrice Class toJson
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
@@ -129,7 +134,6 @@ class CoinPrice {
     data['atl'] = this.atl;
     data['atl_change_percentage'] = this.atlChangePercentage;
     data['atl_date'] = this.atlDate;
-    data['roi'] = this.roi;
     data['last_updated'] = this.lastUpdated;
     return data;
   }
