@@ -141,8 +141,6 @@ class Web3dart {
     String sendTransaction = await ethClient.sendTransaction(
         credentials,
         Transaction.callContract(
-          gasPrice: EtherAmount.inWei(BigInt.from(300)),
-          maxGas: 300000,
           contract: contract,
           function: transferEvent,
           parameters: [toETHAddress, amount],

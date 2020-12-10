@@ -1,3 +1,7 @@
+## 0.1.3
+
+- remove gas price to use default gas price
+
 ## 0.1.2
 
 - update getTopErc20CoinPrice function from coingecko.com
