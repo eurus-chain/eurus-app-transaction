@@ -1,3 +1,7 @@
+## 0.1.4
+
+- add return type into method
+
 ## 0.1.3
 
 - remove gas price to use default gas price

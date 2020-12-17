@@ -27,8 +27,9 @@ class Web3dart {
   }
 
   /// setUpPrivateKey
-  setUpPrivateKey({String privateKey}) async {
+  Future<Credentials> setUpPrivateKey({String privateKey}) async {
     credentials = await ethClient.credentialsFromPrivateKey(privateKey);
+    return credentials;
   }
 
   /// getOwnerAddress
@@ -111,7 +112,8 @@ class Web3dart {
   }
 
   /// sendETHTransaction
-  void sendETHTransaction({EtherAmount amount, String toAddress}) async {
+  Future<String> sendETHTransaction(
+      {EtherAmount amount, String toAddress}) async {
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     String resultString = await ethClient.sendTransaction(
         credentials,
@@ -124,10 +126,11 @@ class Web3dart {
         fetchChainIdFromNetworkId: true);
 
     print("sendTransaction resultString:$resultString");
+    return resultString;
   }
 
   /// sendERC20Transaction
-  void sendERC20Transaction(
+  Future<String> sendERC20Transaction(
       {String contractAddress, BigInt amount, String toAddress}) async {
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     final EthereumAddress contractAddr =
@@ -147,10 +150,12 @@ class Web3dart {
         ),
         fetchChainIdFromNetworkId: true);
     print("sendTransaction result:$sendTransaction");
+
+    return sendTransaction;
   }
 
   /// getETHClientDetail
-  void getETHClientDetail() async {
+  Future<Web3Client> getETHClientDetail() async {
     print("---------------------- getETHClientDetail ----------------------");
     print("getClientVersion:${await ethClient.getClientVersion()}");
     print("getBlockNumber:${await ethClient.getBlockNumber()}");
@@ -160,10 +165,12 @@ class Web3dart {
     print("getMiningHashrate:${await ethClient.getMiningHashrate()}");
     print("getNetworkId:${await ethClient.getNetworkId()}");
     print("getPeerCount:${await ethClient.getPeerCount()}");
+
+    return ethClient;
   }
 
   /// getAddressDetail
-  void getAddressDetail() async {
+  Future<Web3Client> getAddressDetail() async {
     print("---------------------- getAddressDetail ----------------------");
     print("getBalance:${await ethClient.getBalance(
       EthereumAddress.fromHex('0x44f426bc9ac7a83521EA140Aeb70523C0a85945a'),
@@ -179,6 +186,7 @@ class Web3dart {
     print("transactionReceipt.gasUsed:${transactionReceipt.gasUsed}");
     print("transactionReceipt.from:${transactionReceipt.from}");
     print("transactionReceipt.to:${transactionReceipt.to}");
+    return ethClient;
   }
 
   /// initNewWallet
