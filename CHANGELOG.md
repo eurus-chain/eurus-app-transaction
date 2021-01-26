@@ -1,3 +1,7 @@
+## 0.1.5
+
+- support eurus blockchain eth transaction
+
 ## 0.1.4
 
 - add return type into method

@@ -7,6 +7,8 @@ class Web3dart {
   Client httpClient = new Client();
   Web3Client ethClient;
   Credentials credentials;
+  String rpcUrl = "http://13.228.80.104:8545";
+  int chainId = 18;
 
   /// init method
   Web3dart._internal() {
@@ -34,7 +36,6 @@ class Web3dart {
 
   /// getOwnerAddress
   void getOwnerAddress() async {
-    const String rpcUrl = 'http://18.141.43.75:20000';
     EthereumAddress contractAddress =
         EthereumAddress.fromHex('0xfeae27388A65eE984F452f86efFEd42AaBD438FD');
     final client = Web3Client(rpcUrl, Client());
@@ -123,6 +124,24 @@ class Web3dart {
           maxGas: 100000,
           value: amount,
         ),
+        fetchChainIdFromNetworkId: true);
+
+    print("sendTransaction resultString:$resultString");
+    return resultString;
+  }
+
+  /// sendEurusETHTransaction
+  Future<String> sendEurusETHTransaction(
+      {BigInt amount, String toAddress}) async {
+    Web3Client client = Web3Client(rpcUrl, Client());
+    EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
+    String resultString = await client.sendTransaction(
+        credentials,
+        Transaction(
+          to: toETHAddress,
+          value: EtherAmount.inWei(amount),
+        ),
+        chainId: chainId,
         fetchChainIdFromNetworkId: true);
 
     print("sendTransaction resultString:$resultString");
