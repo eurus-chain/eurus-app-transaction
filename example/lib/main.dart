@@ -19,10 +19,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    web3dart.initEthClient(privateKey: 'd1bdc683fbeb9fa0b4ceb26adb39eaffb21b16891ea28e4cf1bc3118fdd39295');
     web3dart.getOwnerAddress();
-    web3dart.setUpPrivateKey(
-        privateKey:
-            'd1bdc683fbeb9fa0b4ceb26adb39eaffb21b16891ea28e4cf1bc3118fdd39295');
   }
 
   Future<void> _incrementCounter() async {

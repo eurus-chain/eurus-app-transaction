@@ -10,30 +10,24 @@ class Web3dart {
   Credentials credentials;
   String rpcUrl = "http://13.228.80.104:8545";
   int chainId = 18;
+  EthereumAddress ethereumAddress;
 
   /// init method
-  Web3dart._internal() {
-    initEthClient();
-  }
+  Web3dart._internal() {}
 
   factory Web3dart() {
     return _instance;
   }
 
   /// initEthClient
-  initEthClient() async {
+  initEthClient({String privateKey}) async {
     mainNetEthClient = new Web3Client(
         'https://ropsten.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565',
         httpClient);
-    credentials = await mainNetEthClient.credentialsFromPrivateKey(
-        "d1bdc683fbeb9fa0b4ceb26adb39eaffb21b16891ea28e4cf1bc3118fdd39295");
-    eurusEthClient =  new Web3Client(rpcUrl, Client());
-  }
-
-  /// setUpPrivateKey
-  Future<Credentials> setUpPrivateKey({String privateKey}) async {
+    eurusEthClient = new Web3Client(rpcUrl, Client());
     credentials = await mainNetEthClient.credentialsFromPrivateKey(privateKey);
-    return credentials;
+    EthereumAddress ethereumAddress = await credentials.extractAddress();
+    print("ethereumAddress:${ethereumAddress.toString()}");
   }
 
   /// getOwnerAddress
@@ -180,8 +174,7 @@ class Web3dart {
     print("getClientVersion:${await client.getClientVersion()}");
     print("getBlockNumber:${await client.getBlockNumber()}");
     print("getGasPrice:${await client.getGasPrice()}");
-    print(
-        "getEtherProtocolVersion:${await client.getEtherProtocolVersion()}");
+    print("getEtherProtocolVersion:${await client.getEtherProtocolVersion()}");
     print("getMiningHashrate:${await client.getMiningHashrate()}");
     print("getNetworkId:${await client.getNetworkId()}");
     print("getPeerCount:${await client.getPeerCount()}");

@@ -1,3 +1,7 @@
+## 0.1.7
+
+- support getting current ethereum address function
+
 ## 0.1.6
 
 - support eurus eth client and mainnet eth client
