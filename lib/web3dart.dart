@@ -13,7 +13,7 @@ class Web3dart {
   EthereumAddress ethereumAddress;
 
   /// init method
-  Web3dart._internal() {}
+  Web3dart._internal();
 
   factory Web3dart() {
     return _instance;
