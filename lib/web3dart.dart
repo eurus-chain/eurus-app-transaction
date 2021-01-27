@@ -5,7 +5,8 @@ import 'package:web3dart/web3dart.dart';
 class Web3dart {
   static final Web3dart _instance = Web3dart._internal();
   Client httpClient = new Client();
-  Web3Client ethClient;
+  Web3Client eurusEthClient;
+  Web3Client mainNetEthClient;
   Credentials credentials;
   String rpcUrl = "http://13.228.80.104:8545";
   int chainId = 18;
@@ -21,16 +22,17 @@ class Web3dart {
 
   /// initEthClient
   initEthClient() async {
-    ethClient = new Web3Client(
+    mainNetEthClient = new Web3Client(
         'https://ropsten.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565',
         httpClient);
-    credentials = await ethClient.credentialsFromPrivateKey(
+    credentials = await mainNetEthClient.credentialsFromPrivateKey(
         "d1bdc683fbeb9fa0b4ceb26adb39eaffb21b16891ea28e4cf1bc3118fdd39295");
+    eurusEthClient =  new Web3Client(rpcUrl, Client());
   }
 
   /// setUpPrivateKey
   Future<Credentials> setUpPrivateKey({String privateKey}) async {
-    credentials = await ethClient.credentialsFromPrivateKey(privateKey);
+    credentials = await mainNetEthClient.credentialsFromPrivateKey(privateKey);
     return credentials;
   }
 
@@ -116,7 +118,7 @@ class Web3dart {
   Future<String> sendETHTransaction(
       {EtherAmount amount, String toAddress}) async {
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
-    String resultString = await ethClient.sendTransaction(
+    String resultString = await mainNetEthClient.sendTransaction(
         credentials,
         Transaction(
           to: toETHAddress,
@@ -133,9 +135,8 @@ class Web3dart {
   /// sendEurusETHTransaction
   Future<String> sendEurusETHTransaction(
       {BigInt amount, String toAddress}) async {
-    Web3Client client = Web3Client(rpcUrl, Client());
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
-    String resultString = await client.sendTransaction(
+    String resultString = await eurusEthClient.sendTransaction(
         credentials,
         Transaction(
           to: toETHAddress,
@@ -160,7 +161,7 @@ class Web3dart {
         ContractAbi.fromJson(abiCode, 'TestingCoin'), contractAddr);
     final transferEvent = contract.function('transfer');
 
-    String sendTransaction = await ethClient.sendTransaction(
+    String sendTransaction = await mainNetEthClient.sendTransaction(
         credentials,
         Transaction.callContract(
           contract: contract,
@@ -174,30 +175,30 @@ class Web3dart {
   }
 
   /// getETHClientDetail
-  Future<Web3Client> getETHClientDetail() async {
+  Future<Web3Client> getETHClientDetail({Web3Client client}) async {
     print("---------------------- getETHClientDetail ----------------------");
-    print("getClientVersion:${await ethClient.getClientVersion()}");
-    print("getBlockNumber:${await ethClient.getBlockNumber()}");
-    print("getGasPrice:${await ethClient.getGasPrice()}");
+    print("getClientVersion:${await client.getClientVersion()}");
+    print("getBlockNumber:${await client.getBlockNumber()}");
+    print("getGasPrice:${await client.getGasPrice()}");
     print(
-        "getEtherProtocolVersion:${await ethClient.getEtherProtocolVersion()}");
-    print("getMiningHashrate:${await ethClient.getMiningHashrate()}");
-    print("getNetworkId:${await ethClient.getNetworkId()}");
-    print("getPeerCount:${await ethClient.getPeerCount()}");
+        "getEtherProtocolVersion:${await client.getEtherProtocolVersion()}");
+    print("getMiningHashrate:${await client.getMiningHashrate()}");
+    print("getNetworkId:${await client.getNetworkId()}");
+    print("getPeerCount:${await client.getPeerCount()}");
 
-    return ethClient;
+    return mainNetEthClient;
   }
 
   /// getAddressDetail
-  Future<Web3Client> getAddressDetail() async {
+  Future<Web3Client> getAddressDetail({Web3Client client}) async {
     print("---------------------- getAddressDetail ----------------------");
-    print("getBalance:${await ethClient.getBalance(
+    print("getBalance:${await client.getBalance(
       EthereumAddress.fromHex('0x44f426bc9ac7a83521EA140Aeb70523C0a85945a'),
     )}");
-    print("etTransactionCount:${await ethClient.getTransactionCount(
+    print("etTransactionCount:${await client.getTransactionCount(
       EthereumAddress.fromHex('0x44f426bc9ac7a83521EA140Aeb70523C0a85945a'),
     )}");
-    TransactionReceipt transactionReceipt = await ethClient.getTransactionReceipt(
+    TransactionReceipt transactionReceipt = await client.getTransactionReceipt(
         "0xfa0a7ed6a87b655f2302ce2d88d1d051c4eeef2af6e82de9850f3527a8106744");
     print("---------------------- hash data ----------------------");
     print(
@@ -205,7 +206,7 @@ class Web3dart {
     print("transactionReceipt.gasUsed:${transactionReceipt.gasUsed}");
     print("transactionReceipt.from:${transactionReceipt.from}");
     print("transactionReceipt.to:${transactionReceipt.to}");
-    return ethClient;
+    return mainNetEthClient;
   }
 
   /// initNewWallet

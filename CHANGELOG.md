@@ -1,3 +1,7 @@
+## 0.1.6
+
+- support eurus eth client and mainnet eth client
+
 ## 0.1.5
 
 - support eurus blockchain eth transaction
