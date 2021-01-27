@@ -1,3 +1,7 @@
+## 0.1.8
+
+- fix some bug
+
 ## 0.1.7
 
 - support getting current ethereum address function

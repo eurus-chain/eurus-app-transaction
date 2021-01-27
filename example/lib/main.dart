@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _incrementCounter() async {
     // web3dart.getETHClientDetail();
     // web3dart.getAddressDetail();
+    print("ethereumAddress:${web3dart.ethereumAddress.toString()}");
     web3dart.sendERC20Transaction(contractAddress: '0x7e0480ca9fd50eb7a3855cf53c347a1b4d6a2ff5',amount: BigInt.from(1000000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
     web3dart.sendEurusETHTransaction(
         amount: BigInt.from(100000000000000000),

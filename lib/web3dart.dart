@@ -26,7 +26,7 @@ class Web3dart {
         httpClient);
     eurusEthClient = new Web3Client(rpcUrl, Client());
     credentials = await mainNetEthClient.credentialsFromPrivateKey(privateKey);
-    EthereumAddress ethereumAddress = await credentials.extractAddress();
+    ethereumAddress = await credentials.extractAddress();
     print("ethereumAddress:${ethereumAddress.toString()}");
   }
 
