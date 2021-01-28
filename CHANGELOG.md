@@ -1,3 +1,7 @@
+## 0.2.1
+
+- remove gas price on mainnet transaction
+
 ## 0.2.0
 
 - remove not use code

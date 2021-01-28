@@ -42,8 +42,8 @@ class Web3dart {
           credentials,
           Transaction(
             to: toETHAddress,
-            gasPrice: EtherAmount.inWei(BigInt.one),
-            maxGas: 100000,
+            // gasPrice: EtherAmount.inWei(BigInt.one),
+            // maxGas: 100000,
             value: EtherAmount.inWei(amount),
           ),
           fetchChainIdFromNetworkId: true);
