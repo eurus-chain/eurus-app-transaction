@@ -1,3 +1,7 @@
+## 0.2.0
+
+- remove not use code
+
 ## 0.1.9
 
 - add transfer eurus usdt function

@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     // web3dart.getAddressDetail();
     print("ethereumAddress:${web3dart.ethereumAddress.toString()}");
     //if usdt Decimals is 6 than 100000 = 1 amount   like BigInt.from(1000000)
-    web3dart.sendERC20FromEurus(contractAddress: '0x68d72c24E60812Ad9E13b0ce8808F74d6BF33a6D',amount: BigInt.from(1000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
+    web3dart.sendERC20(contractAddress: '0x68d72c24E60812Ad9E13b0ce8808F74d6BF33a6D',amount: BigInt.from(1000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',type: BlockChainType.Eurus);
     // web3dart.sendUSDTFromEurus(
     //     amount: BigInt.from(100000000000000000),
     //     toAddress: '0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
