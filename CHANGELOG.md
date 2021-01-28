@@ -1,3 +1,7 @@
+## 0.1.9
+
+- add transfer eurus usdt function
+
 ## 0.1.8
 
 - fix some bug

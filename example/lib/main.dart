@@ -20,17 +20,18 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     web3dart.initEthClient(privateKey: 'd1bdc683fbeb9fa0b4ceb26adb39eaffb21b16891ea28e4cf1bc3118fdd39295');
-    web3dart.getOwnerAddress();
+   // web3dart.getOwnerAddress();
   }
 
   Future<void> _incrementCounter() async {
     // web3dart.getETHClientDetail();
     // web3dart.getAddressDetail();
     print("ethereumAddress:${web3dart.ethereumAddress.toString()}");
-    web3dart.sendERC20Transaction(contractAddress: '0x7e0480ca9fd50eb7a3855cf53c347a1b4d6a2ff5',amount: BigInt.from(1000000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
-    web3dart.sendEurusETHTransaction(
-        amount: BigInt.from(100000000000000000),
-        toAddress: '0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
+    //if usdt Decimals is 6 than 100000 = 1 amount   like BigInt.from(1000000)
+    web3dart.sendERC20FromEurus(contractAddress: '0x68d72c24E60812Ad9E13b0ce8808F74d6BF33a6D',amount: BigInt.from(1000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
+    // web3dart.sendUSDTFromEurus(
+    //     amount: BigInt.from(100000000000000000),
+    //     toAddress: '0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
 
     CoinPriceList coinPrice = await transaction.getTopErc20CoinPrice();
     print("result:$coinPrice");
