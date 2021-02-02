@@ -1,3 +1,7 @@
+## 0.2.2
+
+- update abi
+
 ## 0.2.1
 
 - remove gas price on mainnet transaction
