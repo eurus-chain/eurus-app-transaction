@@ -1,3 +1,7 @@
+## 0.2.3
+
+- show estimateGas on plugin on example
+
 ## 0.2.2
 
 - update abi

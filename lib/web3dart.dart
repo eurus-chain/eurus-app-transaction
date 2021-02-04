@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
+export 'package:web3dart/credentials.dart';
+export 'package:web3dart/web3dart.dart';
 
 enum BlockChainType { Ethereum, Eurus }
 
