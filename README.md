@@ -19,7 +19,7 @@ more!
 In order to send transactions on the Ethereum network, some credentials
 are required. The library supports raw private keys and v3 wallet files.
 
-### Only support ropsten testnet now
+### Only support rinkeby testnet now
 
 ```dart
 import 'package:transaction/web3dart.dart';

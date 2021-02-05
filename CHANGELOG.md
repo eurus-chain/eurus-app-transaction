@@ -1,3 +1,7 @@
+## 0.2.4
+
+- change to rinkeby testnet
+
 ## 0.2.3
 
 - show estimateGas on plugin on example

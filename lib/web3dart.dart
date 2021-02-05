@@ -26,7 +26,7 @@ class Web3dart {
   /// initEthClient
   initEthClient({String privateKey}) async {
     mainNetEthClient = new Web3Client(
-        'https://ropsten.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565',
+        'https://rinkeby.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565',
         httpClient);
     eurusEthClient = new Web3Client(rpcUrl, Client());
     credentials = await mainNetEthClient.credentialsFromPrivateKey(privateKey);
