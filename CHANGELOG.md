@@ -1,3 +1,8 @@
+## 0.2.5
+
+- update web3dart version to 2.0.0-dev.9
+
+
 ## 0.2.4
 
 - change to rinkeby testnet
