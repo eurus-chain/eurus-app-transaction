@@ -44,9 +44,6 @@ class Web3dart {
     usdtContractFromEurus = getEurusUSDTContract(contractAddress: '0x8641874C146c9F16F320798055Ff113885D96414');
   }
 
-  // final transaction = Transaction.callContract(contract: contract, function: yourFunction, parameters: [...]);
-  // await web3client.estimateGas(to: transaction.to, value: transaction.value, data: transaction.data);
-
   Future<String> estimateGas({BlockChainType blockChainType}) async {
     estimateGasString = null;
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
@@ -55,6 +52,25 @@ class Web3dart {
       estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
     print("estimateGas:$estimateGasString");
     return estimateGasString;
+  }
+
+  Transaction getTransactionFromCallContract({DeployedContract deployedContract, BigInt amount, String toAddress}){
+    ContractFunction transferEvent = deployedContract.function('transfer');
+    EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
+    Transaction transaction = Transaction.callContract(
+      contract: deployedContract,
+      function: transferEvent,
+      parameters: [toETHAddress, amount],
+    );
+    return transaction;
+  }
+
+  Future<String> estimateErcTokenGas({DeployedContract deployedContract,BlockChainType blockChainType, BigInt amount, String toAddress}) async {
+    Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
+    Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
+    BigInt estimateGasInt = await client.estimateGas(to: transaction.to, value: transaction.value, data: transaction.data);
+    print("estimateGas:${estimateGasInt.toString()}");
+    return estimateGasInt.toString();
   }
 
   DeployedContract getEthereumUSDTContract({String contractAddress}){
@@ -138,30 +154,14 @@ class Web3dart {
       {DeployedContract deployedContract,
         BigInt amount,
       String toAddress,
-      BlockChainType type}) async {
-    EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
+      BlockChainType blockChainType}) async {
     String transactionResult;
-    if (type == BlockChainType.Ethereum) {
-      ContractFunction transferEvent = deployedContract.function('transfer');
-      transactionResult = await mainNetEthClient.sendTransaction(
+    Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
+    Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
+      transactionResult = await client.sendTransaction(
           credentials,
-          Transaction.callContract(
-            contract: deployedContract,
-            function: transferEvent,
-            parameters: [toETHAddress, amount],
-          ),
+          transaction,
           fetchChainIdFromNetworkId: true);
-    } else {
-      ContractFunction transferEvent = deployedContract.function('transfer');
-      transactionResult = await eurusEthClient.sendTransaction(
-          credentials,
-          Transaction.callContract(
-            contract: deployedContract,
-            function: transferEvent,
-            parameters: [toETHAddress, amount],
-          ),
-          fetchChainIdFromNetworkId: true);
-    }
     print("sendERC20 result:$transactionResult");
     return transactionResult;
   }
