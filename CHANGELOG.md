@@ -1,3 +1,8 @@
+## 0.2.6
+
+- add getERC20Balance method
+- add getETHBalance method
+
 ## 0.2.5
 
 - update web3dart version to 2.0.0-dev.9

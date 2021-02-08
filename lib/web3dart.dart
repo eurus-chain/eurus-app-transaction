@@ -81,24 +81,25 @@ class Web3dart {
     return currentBlockChain == 0 ? mainNetEthClient : eurusEthClient ;
   }
 
-  /// get AccountBalance
+  /// get getETHBalance
   Future<String> getETHBalance({int currentBlockChain}) async {
     Web3Client client = getCurrentClient(currentBlockChain: currentBlockChain);
     EtherAmount balance = await client.getBalance(myEthereumAddress);
-    ethBalanceFromEurus = balance.toString();
+    ethBalanceFromEurus = balance.getValueInUnit(EtherUnit.ether).toString();
     return ethBalanceFromEurus;
   }
 
-  Future<List<String>> getERC20Balance({DeployedContract deployedContract, int decimals, int currentBlockChain}) async {
+  /// get getERC20Balance
+  Future<String> getERC20Balance({DeployedContract deployedContract, int decimals, int currentBlockChain}) async {
     ContractFunction getBalance = deployedContract.function('balanceOf');
     Web3Client client = getCurrentClient(currentBlockChain: currentBlockChain);
     List balance = await client.call(
         contract: deployedContract, function: getBalance, params: [myEthereumAddress]);
     print("balance$balance");
     BigInt intBalance = balance.first;
-    BigInt intDecimals = BigInt.from(10*decimals);
-    double result = intBalance/intDecimals;
-    return balance;
+    String decimalsString = "1".padRight(decimals+1,"0");
+    double stringBalance = intBalance/BigInt.from(int.parse(decimalsString));
+    return stringBalance.toString();
   }
 
 

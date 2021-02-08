@@ -28,10 +28,12 @@ class _MyAppState extends State<MyApp> {
     // web3dart.getAddressDetail();
     print("ethereumAddress:${web3dart.myEthereumAddress.toString()}");
     //if usdt Decimals is 6 than 100000 = 1 amount   like BigInt.from(1000000)
-    // web3dart.sendERC20(deployedContract: web3dart.usdtContractFromEthereum,amount: BigInt.from(1000000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',type: BlockChainType.Ethereum);
-    // web3dart.sendETH(amount: BigInt.from(10000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',type: BlockChainType.Ethereum);
-    web3dart.getERC20Balance(currentBlockChain: 1,deployedContract: web3dart.usdtContractFromEurus,decimals: 8);
+    web3dart.sendERC20(deployedContract: web3dart.usdtContractFromEthereum,amount: BigInt.from(1000000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',type: BlockChainType.Ethereum);
+    web3dart.sendETH(amount: BigInt.from(10000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',type: BlockChainType.Ethereum);
+    web3dart.getERC20Balance(currentBlockChain: 1,deployedContract: web3dart.usdtContractFromEurus,decimals: 6);
     web3dart.getERC20Balance(currentBlockChain: 0,deployedContract: web3dart.usdtContractFromEthereum,decimals: 18);
+    web3dart.getETHBalance(currentBlockChain: 1);
+    web3dart.getETHBalance(currentBlockChain: 0);
     BigInt estimateGas = await web3dart.eurusEthClient.estimateGas(to: EthereumAddress.fromHex('0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A'),value: EtherAmount.inWei(BigInt.from(100000000000000)));
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
     print("estimateGas:${ etherAmount.getValueInUnit(EtherUnit.szabo).toStringAsFixed(10)}");
