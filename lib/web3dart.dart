@@ -47,9 +47,9 @@ class Web3dart {
   // final transaction = Transaction.callContract(contract: contract, function: yourFunction, parameters: [...]);
   // await web3client.estimateGas(to: transaction.to, value: transaction.value, data: transaction.data);
 
-  Future<String> estimateGas({int currentBlockChain}) async {
+  Future<String> estimateGas({BlockChainType blockChainType}) async {
     estimateGasString = null;
-    Web3Client client = currentBlockChain == 0 ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
+    Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     BigInt estimateGas = await client.estimateGas(to: EthereumAddress.fromHex('0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A'),value: EtherAmount.inWei(BigInt.from(1000000)));
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
       estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
@@ -77,28 +77,29 @@ class Web3dart {
     return contract;
   }
 
-  Web3Client getCurrentClient({int currentBlockChain}){
-    return currentBlockChain == 0 ? mainNetEthClient : eurusEthClient ;
+  Web3Client getCurrentClient({BlockChainType blockChainType}){
+    return blockChainType == BlockChainType.Ethereum ? mainNetEthClient : eurusEthClient ;
   }
 
   /// get getETHBalance
-  Future<String> getETHBalance({int currentBlockChain}) async {
-    Web3Client client = getCurrentClient(currentBlockChain: currentBlockChain);
+  Future<String> getETHBalance({BlockChainType blockChainType}) async {
+    Web3Client client = getCurrentClient(blockChainType: blockChainType);
     EtherAmount balance = await client.getBalance(myEthereumAddress);
     ethBalanceFromEurus = balance.getValueInUnit(EtherUnit.ether).toString();
+    print("getETHBalance:$ethBalanceFromEurus");
     return ethBalanceFromEurus;
   }
 
   /// get getERC20Balance
-  Future<String> getERC20Balance({DeployedContract deployedContract, int decimals, int currentBlockChain}) async {
+  Future<String> getERC20Balance({DeployedContract deployedContract, int decimals, BlockChainType blockChainType}) async {
     ContractFunction getBalance = deployedContract.function('balanceOf');
-    Web3Client client = getCurrentClient(currentBlockChain: currentBlockChain);
+    Web3Client client = getCurrentClient(blockChainType: blockChainType);
     List balance = await client.call(
         contract: deployedContract, function: getBalance, params: [myEthereumAddress]);
-    print("balance$balance");
     BigInt intBalance = balance.first;
     String decimalsString = "1".padRight(decimals+1,"0");
     double stringBalance = intBalance/BigInt.from(int.parse(decimalsString));
+    print("getERC20Balance:${stringBalance.toString()}");
     return stringBalance.toString();
   }
 

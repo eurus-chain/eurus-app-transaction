@@ -1,3 +1,7 @@
+## 0.2.7
+
+- only use blockChainType parameter to choose blockchain
+
 ## 0.2.6
 
 - add getERC20Balance method
