@@ -1,3 +1,7 @@
+## 0.2.9
+
+- add getBalance method.
+
 ## 0.2.8
 
 - support estimateErcTokenGas method.

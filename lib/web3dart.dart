@@ -43,6 +43,19 @@ class Web3dart {
     print("ethereumAddress:${myEthereumAddress.toString()}");
     usdtContractFromEthereum = getEurusUSDTContract(contractAddress: '0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c');
     usdtContractFromEurus = getEurusUSDTContract(contractAddress: '0x8641874C146c9F16F320798055Ff113885D96414');
+    getBalance();
+  }
+
+  Future<bool> getBalance() async {
+    web3dart.usdtBalanceFromEurus =  await web3dart.getERC20Balance(blockChainType: BlockChainType.Eurus,
+        deployedContract: web3dart.usdtContractFromEurus,
+        decimals: 6);
+    web3dart.usdtBalanceFromEthereum = await web3dart.getERC20Balance(blockChainType: BlockChainType.Ethereum,
+        deployedContract: web3dart.usdtContractFromEthereum,
+        decimals: 18);
+    web3dart.ethBalanceFromEurus = await web3dart.getETHBalance(blockChainType: BlockChainType.Eurus);
+    web3dart.ethBalanceFromEthereum = await web3dart.getETHBalance(blockChainType: BlockChainType.Ethereum);
+    return true;
   }
 
   Future<String> estimateGas({BlockChainType blockChainType, BigInt amount, String toAddress}) async {
