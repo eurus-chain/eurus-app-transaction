@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:http/http.dart';
+import 'package:web3dart/credentials.dart';
 import 'package:web3dart/web3dart.dart';
 export 'package:web3dart/credentials.dart';
 export 'package:web3dart/web3dart.dart';
@@ -44,10 +45,10 @@ class Web3dart {
     usdtContractFromEurus = getEurusUSDTContract(contractAddress: '0x8641874C146c9F16F320798055Ff113885D96414');
   }
 
-  Future<String> estimateGas({BlockChainType blockChainType}) async {
+  Future<String> estimateGas({BlockChainType blockChainType, BigInt amount, String toAddress}) async {
     estimateGasString = null;
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
-    BigInt estimateGas = await client.estimateGas(to: EthereumAddress.fromHex('0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A'),value: EtherAmount.inWei(BigInt.from(1000000)));
+    BigInt estimateGas = await client.estimateGas(to: EthereumAddress.fromHex(toAddress),value: EtherAmount.inWei(amount));
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
       estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
     print("estimateGas:$estimateGasString");
@@ -68,9 +69,11 @@ class Web3dart {
   Future<String> estimateErcTokenGas({DeployedContract deployedContract,BlockChainType blockChainType, BigInt amount, String toAddress}) async {
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
-    BigInt estimateGasInt = await client.estimateGas(to: transaction.to, value: transaction.value, data: transaction.data);
-    print("estimateGas:${estimateGasInt.toString()}");
-    return estimateGasInt.toString();
+    BigInt estimateGas = await client.estimateGas(to: EthereumAddress.fromHex(toAddress), value: EtherAmount.inWei(amount), data: transaction.data);
+    EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
+    estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
+    print("estimateErcTokenGas:$estimateGasString");
+    return estimateGasString;
   }
 
   DeployedContract getEthereumUSDTContract({String contractAddress}){

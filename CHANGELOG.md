@@ -1,3 +1,7 @@
+## 0.2.8
+
+- support estimateErcTokenGas method.
+
 ## 0.2.7
 
 - only use blockChainType parameter to choose blockchain
