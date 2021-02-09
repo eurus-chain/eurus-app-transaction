@@ -63,7 +63,7 @@ class Web3dart {
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     BigInt estimateGas = await client.estimateGas(to: EthereumAddress.fromHex(toAddress),value: EtherAmount.inWei(amount));
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
-      estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
+    estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
     print("estimateGas:$estimateGasString");
     return estimateGasString;
   }
@@ -117,7 +117,7 @@ class Web3dart {
   Future<String> getETHBalance({BlockChainType blockChainType}) async {
     Web3Client client = getCurrentClient(blockChainType: blockChainType);
     EtherAmount balance = await client.getBalance(myEthereumAddress);
-    ethBalanceFromEurus = balance.getValueInUnit(EtherUnit.ether).toString();
+    ethBalanceFromEurus = balance.getValueInUnit(EtherUnit.ether).toStringAsFixed(8);
     print("getETHBalance:$ethBalanceFromEurus");
     return ethBalanceFromEurus;
   }
@@ -132,7 +132,7 @@ class Web3dart {
     String decimalsString = "1".padRight(decimals+1,"0");
     double stringBalance = intBalance/BigInt.from(int.parse(decimalsString));
     print("getERC20Balance:${stringBalance.toString()}");
-    return stringBalance.toString();
+    return stringBalance.toStringAsFixed(8);
   }
 
 
@@ -169,15 +169,15 @@ class Web3dart {
   Future<String> sendERC20(
       {DeployedContract deployedContract,
         BigInt amount,
-      String toAddress,
-      BlockChainType blockChainType}) async {
+        String toAddress,
+        BlockChainType blockChainType}) async {
     String transactionResult;
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
-      transactionResult = await client.sendTransaction(
-          credentials,
-          transaction,
-          fetchChainIdFromNetworkId: true);
+    transactionResult = await client.sendTransaction(
+        credentials,
+        transaction,
+        fetchChainIdFromNetworkId: true);
     print("sendERC20 result:$transactionResult");
     return transactionResult;
   }
@@ -185,7 +185,7 @@ class Web3dart {
   /// getETHClientDetail
   Future<Web3Client> getETHClientDetail({BlockChainType type}) async {
     Web3Client client =
-        type == BlockChainType.Ethereum ? myEthereumAddress : eurusEthClient;
+    type == BlockChainType.Ethereum ? myEthereumAddress : eurusEthClient;
     print("---------------------- getETHClientDetail ----------------------");
     print("getClientVersion:${await client.getClientVersion()}");
     print("getBlockNumber:${await client.getBlockNumber()}");
@@ -201,7 +201,7 @@ class Web3dart {
   /// getAddressDetail
   Future<Web3Client> getAddressDetail({BlockChainType type}) async {
     Web3Client client =
-        type == BlockChainType.Ethereum ? myEthereumAddress : eurusEthClient;
+    type == BlockChainType.Ethereum ? myEthereumAddress : eurusEthClient;
     print("---------------------- getAddressDetail ----------------------");
     print("getBalance:${await client.getBalance(
       EthereumAddress.fromHex('0x44f426bc9ac7a83521EA140Aeb70523C0a85945a'),
@@ -229,7 +229,7 @@ class Web3dart {
     print("extract address: ${address.hex}");
 
     Wallet wallet =
-        Wallet.createNew(random, 'password', Random(), scryptN: pow(2, 8));
+    Wallet.createNew(random, 'password', Random(), scryptN: pow(2, 8));
     print("wallet json ${wallet.toJson()}");
   }
 }
