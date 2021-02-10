@@ -1,3 +1,6 @@
+## 0.3.0
+- update balance string
+
 ## 0.2.9
 
 - add getBalance method.
