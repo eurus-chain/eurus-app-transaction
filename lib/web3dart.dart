@@ -22,8 +22,8 @@ class Web3dart {
   String ethBalanceFromEurus;
   String usdtBalanceFromEurus;
   String lastTxId;
-  DeployedContract usdtContractFromEthereum;
-  DeployedContract usdtContractFromEurus;
+  DeployedContract erc20ContractFromEthereum;
+  DeployedContract erc20ContractFromEurus;
 
   /// init method
   Web3dart._internal();
@@ -33,7 +33,7 @@ class Web3dart {
   }
 
   /// initEthClient
-  initEthClient({String privateKey}) async {
+  Future<bool> initEthClient({String privateKey}) async {
     mainNetEthClient = new Web3Client(
         'https://rinkeby.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565',
         httpClient);
@@ -41,18 +41,31 @@ class Web3dart {
     credentials = await mainNetEthClient.credentialsFromPrivateKey(privateKey);
     myEthereumAddress = await credentials.extractAddress();
     print("ethereumAddress:${myEthereumAddress.toString()}");
-    usdtContractFromEthereum = getEurusUSDTContract(contractAddress: '0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c');
-    usdtContractFromEurus = getEurusUSDTContract(contractAddress: '0x8641874C146c9F16F320798055Ff113885D96414');
+    return true;
+    // erc20ContractFromEthereum = getEthereumERC20Contract(contractAddress: '0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c');
+    // erc20ContractFromEurus = getEurusERC20Contract(contractAddress: '0x8641874C146c9F16F320798055Ff113885D96414');
+  }
+
+  DeployedContract setErc20Contract({String contractAddress,BlockChainType blockChainType}){
+    DeployedContract deployedContract;
+    if(blockChainType == BlockChainType.Ethereum){
+      erc20ContractFromEthereum = getEthereumERC20Contract(contractAddress: contractAddress);
+      deployedContract = erc20ContractFromEthereum;
+    } else {
+      erc20ContractFromEurus = getEurusERC20Contract(contractAddress: contractAddress);
+      deployedContract = erc20ContractFromEurus;
+    }
     getBalance();
+    return deployedContract;
   }
 
   Future<bool> getBalance() async {
     web3dart.usdtBalanceFromEthereum = await web3dart.getERC20Balance(blockChainType: BlockChainType.Ethereum,
-        deployedContract: web3dart.usdtContractFromEthereum,
+        deployedContract: web3dart.erc20ContractFromEthereum,
         decimals: 18);
     web3dart.ethBalanceFromEthereum = await web3dart.getETHBalance(blockChainType: BlockChainType.Ethereum);
     web3dart.usdtBalanceFromEurus =  await web3dart.getERC20Balance(blockChainType: BlockChainType.Eurus,
-        deployedContract: web3dart.usdtContractFromEurus,
+        deployedContract: web3dart.erc20ContractFromEurus,
         decimals: 6);
     web3dart.ethBalanceFromEurus = await web3dart.getETHBalance(blockChainType: BlockChainType.Eurus);
     return true;
@@ -82,14 +95,14 @@ class Web3dart {
   Future<String> estimateErcTokenGas({DeployedContract deployedContract,BlockChainType blockChainType, BigInt amount, String toAddress}) async {
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
-    BigInt estimateGas = await client.estimateGas(to: EthereumAddress.fromHex(toAddress), value: EtherAmount.inWei(amount), data: transaction.data);
+    BigInt estimateGas = await client.estimateGas(sender:await credentials.extractAddress(),to: EthereumAddress.fromHex(toAddress), data: transaction.data);
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
     estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
     print("estimateErcTokenGas:$estimateGasString");
     return estimateGasString;
   }
 
-  DeployedContract getEthereumUSDTContract({String contractAddress}){
+  DeployedContract getEthereumERC20Contract({String contractAddress}){
     final EthereumAddress contractAddr =
     EthereumAddress.fromHex(contractAddress);
     String abiCode =
@@ -99,7 +112,7 @@ class Web3dart {
     return contract;
   }
 
-  DeployedContract getEurusUSDTContract({String contractAddress}){
+  DeployedContract getEurusERC20Contract({String contractAddress}){
     final EthereumAddress contractAddr =
     EthereumAddress.fromHex(contractAddress);
     String abiCode =

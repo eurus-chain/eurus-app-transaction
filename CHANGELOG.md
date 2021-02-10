@@ -1,3 +1,6 @@
+## 0.3.1
+- add setErc20Contract
+
 ## 0.3.0
 - update balance string
 
