@@ -117,7 +117,7 @@ class Web3dart {
   Future<String> getETHBalance({BlockChainType blockChainType}) async {
     Web3Client client = getCurrentClient(blockChainType: blockChainType);
     EtherAmount balance = await client.getBalance(myEthereumAddress);
-    ethBalanceFromEurus = balance.getValueInUnit(EtherUnit.ether).toStringAsFixed(8);
+    String ethBalanceFromEurus = balance.getValueInUnit(EtherUnit.ether).toStringAsFixed(8);
     print("getETHBalance:$ethBalanceFromEurus");
     return ethBalanceFromEurus;
   }
