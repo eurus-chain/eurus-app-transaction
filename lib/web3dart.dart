@@ -47,14 +47,14 @@ class Web3dart {
   }
 
   Future<bool> getBalance() async {
-    web3dart.usdtBalanceFromEurus =  await web3dart.getERC20Balance(blockChainType: BlockChainType.Eurus,
-        deployedContract: web3dart.usdtContractFromEurus,
-        decimals: 6);
     web3dart.usdtBalanceFromEthereum = await web3dart.getERC20Balance(blockChainType: BlockChainType.Ethereum,
         deployedContract: web3dart.usdtContractFromEthereum,
         decimals: 18);
-    web3dart.ethBalanceFromEurus = await web3dart.getETHBalance(blockChainType: BlockChainType.Eurus);
     web3dart.ethBalanceFromEthereum = await web3dart.getETHBalance(blockChainType: BlockChainType.Ethereum);
+    web3dart.usdtBalanceFromEurus =  await web3dart.getERC20Balance(blockChainType: BlockChainType.Eurus,
+        deployedContract: web3dart.usdtContractFromEurus,
+        decimals: 6);
+    web3dart.ethBalanceFromEurus = await web3dart.getETHBalance(blockChainType: BlockChainType.Eurus);
     return true;
   }
 
