@@ -18,13 +18,13 @@ class Web3dart {
   EthereumAddress myEthereumAddress;
   String estimateGasString;
   String ethBalanceFromEthereum;
-  String usdtBalanceFromEthereum;
+  String erc20TokenBalanceFromEthereum;
   String ethBalanceFromEurus;
-  String usdtBalanceFromEurus;
+  String erc20TokenBalanceFromEurus;
   String lastTxId;
   DeployedContract erc20ContractFromEthereum;
   DeployedContract erc20ContractFromEurus;
-
+  List<dynamic> tokenList = new List<dynamic>();
   /// init method
   Web3dart._internal();
 
@@ -60,13 +60,11 @@ class Web3dart {
   }
 
   Future<bool> getBalance() async {
-    web3dart.usdtBalanceFromEthereum = await web3dart.getERC20Balance(blockChainType: BlockChainType.Ethereum,
-        deployedContract: web3dart.erc20ContractFromEthereum,
-        decimals: 18);
+    web3dart.erc20TokenBalanceFromEthereum = await web3dart.getERC20Balance(blockChainType: BlockChainType.Ethereum,
+        deployedContract: web3dart.erc20ContractFromEthereum);
     web3dart.ethBalanceFromEthereum = await web3dart.getETHBalance(blockChainType: BlockChainType.Ethereum);
-    web3dart.usdtBalanceFromEurus =  await web3dart.getERC20Balance(blockChainType: BlockChainType.Eurus,
-        deployedContract: web3dart.erc20ContractFromEurus,
-        decimals: 6);
+    web3dart.erc20TokenBalanceFromEurus =  await web3dart.getERC20Balance(blockChainType: BlockChainType.Eurus,
+        deployedContract: web3dart.erc20ContractFromEurus);
     web3dart.ethBalanceFromEurus = await web3dart.getETHBalance(blockChainType: BlockChainType.Eurus);
     return true;
   }
@@ -100,6 +98,16 @@ class Web3dart {
     estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
     print("estimateErcTokenGas:$estimateGasString");
     return estimateGasString;
+  }
+
+  DeployedContract getExternalSmartContractConfig({String contractAddress}){
+    final EthereumAddress contractAddr =
+    EthereumAddress.fromHex(contractAddress);
+    String abiCode =
+    '''[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"addressList","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"currencyList","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_currencyAddr","type":"address"},{"internalType":"string","name":"asset","type":"string"}],"name":"addCurrencyInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"asset","type":"string"}],"name":"removeCurrencyInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"asset","type":"string"}],"name":"getErc20SmartContractAddrByAssetName","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_currencyAddr","type":"address"}],"name":"getErc20SmartContractByAddr","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAssetAddress","outputs":[{"internalType":"string[]","name":"","type":"string[]"},{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"}]''';
+    DeployedContract contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'ExternalSmartContractConfig'), contractAddr);
+    return contract;
   }
 
   DeployedContract getEthereumERC20Contract({String contractAddress}){
@@ -136,18 +144,32 @@ class Web3dart {
   }
 
   /// get getERC20Balance
-  Future<String> getERC20Balance({DeployedContract deployedContract, int decimals, BlockChainType blockChainType}) async {
-    ContractFunction getBalance = deployedContract.function('balanceOf');
+  Future<String> getERC20Balance({DeployedContract deployedContract, BlockChainType blockChainType}) async {
     Web3Client client = getCurrentClient(blockChainType: blockChainType);
+    ContractFunction getBalance = deployedContract.function('balanceOf');
     List balance = await client.call(
         contract: deployedContract, function: getBalance, params: [myEthereumAddress]);
+    ContractFunction getDecimals = deployedContract.function('decimals');
+    List decimalsNumber = await client.call(
+        contract: deployedContract, function: getDecimals, params: []);
     BigInt intBalance = balance.first;
-    String decimalsString = "1".padRight(decimals+1,"0");
+    BigInt decimalsBalance = decimalsNumber.first;
+    String decimalsString = "1".padRight(decimalsBalance.toInt()+1,"0");
     double stringBalance = intBalance/BigInt.from(int.parse(decimalsString));
     print("getERC20Balance:${stringBalance.toString()}");
     return stringBalance.toStringAsFixed(8);
   }
 
+  /// get getETHBalance
+  Future<List<dynamic>> getERC20TokenList({BlockChainType blockChainType}) async {
+    Web3Client client = getCurrentClient(blockChainType: blockChainType);
+    DeployedContract deployedContract = getExternalSmartContractConfig(contractAddress: '0xB0b76Bd400240f48858F8Bd7a5A7c3a7f86d3fa8');
+    ContractFunction getAssetAddress = deployedContract.function('getAssetAddress');
+    tokenList = await client.call(
+        contract: deployedContract, function: getAssetAddress, params: []);
+    print("getERC20Balance:${tokenList}");
+    return tokenList;
+  }
 
   /// sendETH
   Future<String> sendETH(
