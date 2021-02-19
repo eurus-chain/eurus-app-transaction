@@ -101,6 +101,16 @@ class Web3dart {
     return estimateGasString;
   }
 
+  DeployedContract getEurusInternalConfig({String contractAddress}){
+    final EthereumAddress contractAddr =
+    EthereumAddress.fromHex(contractAddress);
+    String abiCode =
+    '''[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"","type":"string"}],"name":"Event","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"}],"name":"OwnerAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"}],"name":"OwnerRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"addOwner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"addressList","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"eurusUserDepositAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"getOwnerCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"getOwners","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"addr","type":"address"}],"name":"isOwner","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"platformWalletAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"removeOwner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_currencyAddr","type":"address"},{"internalType":"string","name":"asset","type":"string"}],"name":"addCurrencyInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"asset","type":"string"}],"name":"removeCurrencyInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"asset","type":"string"}],"name":"getErc20SmartContractAddrByAssetName","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"_currencyAddr","type":"address"}],"name":"getErc20SmartContractByAddr","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"address","name":"coldWalletAddr","type":"address"}],"name":"setPlatformWalletAddress","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"userDepositAddr","type":"address"}],"name":"setEurusUserDepositAddress","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getAssetAddress","outputs":[{"internalType":"string[]","name":"","type":"string[]"},{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function","constant":true}]''';
+    DeployedContract contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'EurusInternalConfig'), contractAddr);
+    return contract;
+  }
+
   DeployedContract getExternalSmartContractConfig({String contractAddress}){
     final EthereumAddress contractAddr =
     EthereumAddress.fromHex(contractAddress);
@@ -171,7 +181,7 @@ class Web3dart {
   /// get getETHBalance
   Future<List<dynamic>> getERC20TokenList({BlockChainType blockChainType}) async {
     Web3Client client = getCurrentClient(blockChainType: blockChainType);
-    DeployedContract deployedContract = getExternalSmartContractConfig(contractAddress: '0x0368ff02a8C27A1E0E24138F2464789656DA76f1');
+    DeployedContract deployedContract =  blockChainType == BlockChainType.Eurus? getExternalSmartContractConfig(contractAddress: '0xB0b76Bd400240f48858F8Bd7a5A7c3a7f86d3fa8') : getEurusInternalConfig(contractAddress: '0xCE61fEB8Aee906FA770cdaBA8Db66b04F7ef8108');
     ContractFunction getAssetAddress = deployedContract.function('getAssetAddress');
     tokenList = await client.call(
         contract: deployedContract, function: getAssetAddress, params: []);
