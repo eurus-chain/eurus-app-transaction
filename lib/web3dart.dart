@@ -25,6 +25,7 @@ class Web3dart {
   DeployedContract erc20ContractFromEthereum;
   DeployedContract erc20ContractFromEurus;
   List<dynamic> tokenList = new List<dynamic>();
+  Map tokenListMap;
   /// init method
   Web3dart._internal();
 
@@ -149,31 +150,48 @@ class Web3dart {
     ContractFunction getBalance = deployedContract.function('balanceOf');
     List balance = await client.call(
         contract: deployedContract, function: getBalance, params: [myEthereumAddress]);
-    ContractFunction getDecimals = deployedContract.function('decimals');
-    List decimalsNumber = await client.call(
-        contract: deployedContract, function: getDecimals, params: []);
     BigInt intBalance = balance.first;
-    BigInt decimalsBalance = decimalsNumber.first;
+    BigInt decimalsBalance = await getContractDecimal(deployedContract: deployedContract,blockChainType: blockChainType);
     String decimalsString = "1".padRight(decimalsBalance.toInt()+1,"0");
     double stringBalance = intBalance/BigInt.from(int.parse(decimalsString));
     print("getERC20Balance:${stringBalance.toString()}");
     return stringBalance.toStringAsFixed(8);
   }
 
+  Future<BigInt> getContractDecimal({DeployedContract deployedContract, BlockChainType blockChainType}) async {
+    Web3Client client = getCurrentClient(blockChainType: blockChainType);
+    ContractFunction getDecimals = deployedContract.function('decimals');
+    List decimalsNumber = await client.call(
+        contract: deployedContract, function: getDecimals, params: []);
+    BigInt decimalsBalance = decimalsNumber.first;
+    print("decimalsBalance$decimalsBalance");
+    return decimalsBalance;
+  }
+
   /// get getETHBalance
   Future<List<dynamic>> getERC20TokenList({BlockChainType blockChainType}) async {
     Web3Client client = getCurrentClient(blockChainType: blockChainType);
-    DeployedContract deployedContract = getExternalSmartContractConfig(contractAddress: '0xB0b76Bd400240f48858F8Bd7a5A7c3a7f86d3fa8');
+    DeployedContract deployedContract = getExternalSmartContractConfig(contractAddress: '0x0368ff02a8C27A1E0E24138F2464789656DA76f1');
     ContractFunction getAssetAddress = deployedContract.function('getAssetAddress');
     tokenList = await client.call(
         contract: deployedContract, function: getAssetAddress, params: []);
     print("getERC20Balance:${tokenList}");
+    tokenListMap = new Map();
+    if (tokenList != null && tokenList[0] != null) {
+      for (var i = 0; i < tokenList[0].length; i++) {
+        String tokenName = tokenList[0][i];
+        EthereumAddress tokenAddress = tokenList[1][i];
+        tokenListMap[tokenName] = tokenAddress.toString();
+      }
+    }
+    print('tokenListMap$tokenListMap');
     return tokenList;
   }
 
   /// sendETH
   Future<String> sendETH(
-      {BigInt amount, String toAddress, BlockChainType type}) async {
+      {double enterAmount, String toAddress, BlockChainType type}) async {
+    BigInt amount = BigInt.from(1000000000000000000 * enterAmount);
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     String resultString;
     if (type == BlockChainType.Ethereum) {
@@ -203,11 +221,15 @@ class Web3dart {
   /// sendERC20
   Future<String> sendERC20(
       {DeployedContract deployedContract,
-        BigInt amount,
+        double enterAmount,
         String toAddress,
         BlockChainType blockChainType}) async {
     String transactionResult;
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
+    BigInt decimalsBalance = await getContractDecimal(deployedContract: deployedContract,blockChainType: blockChainType);
+    String decimalsString = "1".padRight(decimalsBalance.toInt()+1,"0");
+    BigInt amount = BigInt.from(double.parse(decimalsString) * enterAmount);
+    print("BigIntamount:$amount");
     Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
     transactionResult = await client.sendTransaction(
         credentials,
