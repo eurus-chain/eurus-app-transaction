@@ -175,7 +175,7 @@ class Web3dart {
     ContractFunction getAssetAddress = deployedContract.function('getAssetAddress');
     tokenList = await client.call(
         contract: deployedContract, function: getAssetAddress, params: []);
-    print("getERC20Balance:${tokenList}");
+    print("getERC20Balance:$tokenList");
     tokenListMap = new Map();
     if (tokenList != null && tokenList[0] != null) {
       for (var i = 0; i < tokenList[0].length; i++) {
