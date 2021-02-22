@@ -1,3 +1,7 @@
+## 0.3.3
+- add submitWithdrawERC20 method
+- add getEurusUserDepositAddress method
+
 ## 0.3.2
 - add get decimal method from smart contract
 
