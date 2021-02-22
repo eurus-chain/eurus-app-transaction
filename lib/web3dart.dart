@@ -43,10 +43,9 @@ class Web3dart {
     myEthereumAddress = publicAddress != null ? EthereumAddress.fromHex(publicAddress) : credentials != null ? await credentials.extractAddress() : null;
     print("ethereumAddress:${myEthereumAddress.toString()}");
     return true;
-    // erc20ContractFromEthereum = getEthereumERC20Contract(contractAddress: '0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c');
-    // erc20ContractFromEurus = getEurusERC20Contract(contractAddress: '0x8641874C146c9F16F320798055Ff113885D96414');
   }
 
+  /// setErc20Contract
   DeployedContract setErc20Contract({String contractAddress,BlockChainType blockChainType}){
     DeployedContract deployedContract;
     if(blockChainType == BlockChainType.Ethereum){
@@ -59,6 +58,7 @@ class Web3dart {
     return deployedContract;
   }
 
+  /// getBalance
   Future<bool> getBalance() async {
     web3dart.erc20TokenBalanceFromEthereum = await web3dart.getERC20Balance(blockChainType: BlockChainType.Ethereum,
         deployedContract: web3dart.erc20ContractFromEthereum);
@@ -69,6 +69,7 @@ class Web3dart {
     return true;
   }
 
+  /// estimateGas
   Future<String> estimateGas({BlockChainType blockChainType, BigInt amount, String toAddress}) async {
     estimateGasString = null;
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
@@ -79,6 +80,7 @@ class Web3dart {
     return estimateGasString;
   }
 
+  /// getTransactionFromCallContract
   Transaction getTransactionFromCallContract({DeployedContract deployedContract, BigInt amount, String toAddress}){
     ContractFunction transferEvent = deployedContract.function('transfer');
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
@@ -90,6 +92,7 @@ class Web3dart {
     return transaction;
   }
 
+  /// estimateErcTokenGas
   Future<String> estimateErcTokenGas({DeployedContract deployedContract,BlockChainType blockChainType, BigInt amount, String toAddress}) async {
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
@@ -100,6 +103,7 @@ class Web3dart {
     return estimateGasString;
   }
 
+  /// getEurusInternalConfig
   DeployedContract getEurusInternalConfig(){
     final EthereumAddress contractAddr =
     EthereumAddress.fromHex('0xEed0595d7BA00137bD674Fbe8aAc77162Efb1786');
@@ -110,6 +114,7 @@ class Web3dart {
     return contract;
   }
 
+  /// getExternalSmartContractConfig
   DeployedContract getExternalSmartContractConfig(){
     final EthereumAddress contractAddr =
     EthereumAddress.fromHex('0x1c1325301CB5827f462aB1a700bfB9E8d785e9C4');
@@ -120,6 +125,7 @@ class Web3dart {
     return contract;
   }
 
+  /// getEthereumERC20Contract
   DeployedContract getEthereumERC20Contract({String contractAddress}){
     final EthereumAddress contractAddr =
     EthereumAddress.fromHex(contractAddress);
@@ -130,6 +136,7 @@ class Web3dart {
     return contract;
   }
 
+  /// getEurusERC20Contract
   DeployedContract getEurusERC20Contract({String contractAddress}){
     final EthereumAddress contractAddr =
     EthereumAddress.fromHex(contractAddress);
@@ -140,6 +147,7 @@ class Web3dart {
     return contract;
   }
 
+  /// getCurrentClient
   Web3Client getCurrentClient({BlockChainType blockChainType}){
     return blockChainType == BlockChainType.Ethereum ? mainNetEthClient : eurusEthClient ;
   }
@@ -187,6 +195,7 @@ class Web3dart {
     return tokenList;
   }
 
+  /// getContractDecimal
   Future<BigInt> getContractDecimal({DeployedContract deployedContract, BlockChainType blockChainType}) async {
     Web3Client client = getCurrentClient(blockChainType: blockChainType);
     ContractFunction getDecimals = deployedContract.function('decimals');
@@ -197,6 +206,7 @@ class Web3dart {
     return decimalsBalance;
   }
 
+  /// getEurusUserDepositAddress
   Future<String> getEurusUserDepositAddress() async {
     Web3Client client = getCurrentClient(blockChainType: BlockChainType.Ethereum);
     DeployedContract deployedContract =  getEurusInternalConfig();
@@ -208,6 +218,7 @@ class Web3dart {
     return ethereumAddress.toString();
   }
 
+  /// getTokenSymbol
   Future<String> getTokenSymbol({DeployedContract deployedContract, BlockChainType blockChainType}) async {
     Web3Client client = getCurrentClient(blockChainType: blockChainType);
     ContractFunction getDecimals = deployedContract.function('symbol');
@@ -269,7 +280,7 @@ class Web3dart {
     return transactionResult;
   }
 
-  /// sendERC20
+  /// submitWithdrawERC20
   Future<String> submitWithdrawERC20(
       {DeployedContract deployedContract,
         double enterAmount,
