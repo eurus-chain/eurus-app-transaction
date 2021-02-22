@@ -34,13 +34,13 @@ class Web3dart {
   }
 
   /// initEthClient
-  Future<bool> initEthClient({String privateKey}) async {
+  Future<bool> initEthClient({String privateKey, String publicAddress}) async {
     mainNetEthClient = new Web3Client(
         'https://rinkeby.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565',
         httpClient);
     eurusEthClient = new Web3Client(rpcUrl, Client());
-    credentials = await mainNetEthClient.credentialsFromPrivateKey(privateKey);
-    myEthereumAddress = await credentials.extractAddress();
+    credentials = privateKey != null ? await mainNetEthClient.credentialsFromPrivateKey(privateKey) : null;
+    myEthereumAddress = publicAddress != null ? EthereumAddress.fromHex(publicAddress) : credentials != null ? await credentials.extractAddress() : null;
     print("ethereumAddress:${myEthereumAddress.toString()}");
     return true;
     // erc20ContractFromEthereum = getEthereumERC20Contract(contractAddress: '0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c');
