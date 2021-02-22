@@ -56,7 +56,6 @@ class Web3dart {
       erc20ContractFromEurus = getEurusERC20Contract(contractAddress: contractAddress);
       deployedContract = erc20ContractFromEurus;
     }
-    getBalance();
     return deployedContract;
   }
 
