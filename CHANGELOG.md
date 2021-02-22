@@ -1,3 +1,6 @@
+## 0.3.4
+- add getTokenSymbol method
+
 ## 0.3.3
 - add submitWithdrawERC20 method
 - add getEurusUserDepositAddress method

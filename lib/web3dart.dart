@@ -168,16 +168,6 @@ class Web3dart {
     return stringBalance.toStringAsFixed(8);
   }
 
-  Future<BigInt> getContractDecimal({DeployedContract deployedContract, BlockChainType blockChainType}) async {
-    Web3Client client = getCurrentClient(blockChainType: blockChainType);
-    ContractFunction getDecimals = deployedContract.function('decimals');
-    List decimalsNumber = await client.call(
-        contract: deployedContract, function: getDecimals, params: []);
-    BigInt decimalsBalance = decimalsNumber.first;
-    print("decimalsBalance$decimalsBalance");
-    return decimalsBalance;
-  }
-
   /// get getETHBalance
   Future<List<dynamic>> getERC20TokenList({BlockChainType blockChainType}) async {
     Web3Client client = getCurrentClient(blockChainType: blockChainType);
@@ -198,6 +188,16 @@ class Web3dart {
     return tokenList;
   }
 
+  Future<BigInt> getContractDecimal({DeployedContract deployedContract, BlockChainType blockChainType}) async {
+    Web3Client client = getCurrentClient(blockChainType: blockChainType);
+    ContractFunction getDecimals = deployedContract.function('decimals');
+    List decimalsNumber = await client.call(
+        contract: deployedContract, function: getDecimals, params: []);
+    BigInt decimalsBalance = decimalsNumber.first;
+    print("decimalsBalance$decimalsBalance");
+    return decimalsBalance;
+  }
+
   Future<String> getEurusUserDepositAddress() async {
     Web3Client client = getCurrentClient(blockChainType: BlockChainType.Ethereum);
     DeployedContract deployedContract =  getEurusInternalConfig();
@@ -207,6 +207,16 @@ class Web3dart {
     print('getEurusUserDepositAddress$address');
     EthereumAddress ethereumAddress = address.first;
     return ethereumAddress.toString();
+  }
+
+  Future<String> getTokenSymbol({DeployedContract deployedContract, BlockChainType blockChainType}) async {
+    Web3Client client = getCurrentClient(blockChainType: blockChainType);
+    ContractFunction getDecimals = deployedContract.function('symbol');
+    List name = await client.call(
+        contract: deployedContract, function: getDecimals, params: []);
+    String tokenName = name.first;
+    print("tokenName:$tokenName");
+    return tokenName;
   }
 
   /// sendETH
