@@ -26,6 +26,8 @@ class Web3dart {
   DeployedContract erc20ContractFromEurus;
   List<dynamic> tokenList = new List<dynamic>();
   Map tokenListMap;
+  Future<Credentials> Function() get canGetCredentialsHandler => () async => await mainNetEthClient.credentialsFromPrivateKey(await canGetPrivateKeyHandler());
+  Future<String> Function() canGetPrivateKeyHandler;
   /// init method
   Web3dart._internal();
 
@@ -34,7 +36,7 @@ class Web3dart {
   }
 
   /// initEthClient
-  Future<bool> initEthClient({String privateKey, String publicAddress}) async {
+  Future<bool> initEthClient({String privateKey, String publicAddress, Future<String> Function() canGetPrivateKeyHandler}) async {
     mainNetEthClient = new Web3Client(
         'https://rinkeby.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565',
         httpClient);
@@ -42,6 +44,7 @@ class Web3dart {
     credentials = privateKey != null ? await mainNetEthClient.credentialsFromPrivateKey(privateKey) : null;
     myEthereumAddress = publicAddress != null ? EthereumAddress.fromHex(publicAddress) : credentials != null ? await credentials.extractAddress() : null;
     print("ethereumAddress:${myEthereumAddress.toString()}");
+    // canGetCredentialsHandler = canGetPrivateKeyHandler != null ? () async => await mainNetEthClient.credentialsFromPrivateKey(await canGetPrivateKeyHandler()) : this.canGetCredentialsHandler;
     return true;
   }
 
@@ -96,7 +99,7 @@ class Web3dart {
   Future<String> estimateErcTokenGas({DeployedContract deployedContract,BlockChainType blockChainType, BigInt amount, String toAddress}) async {
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
-    BigInt estimateGas = await client.estimateGas(sender:await credentials.extractAddress(),to: EthereumAddress.fromHex(toAddress), data: transaction.data);
+    BigInt estimateGas = await client.estimateGas(sender: myEthereumAddress, to: EthereumAddress.fromHex(toAddress), data: transaction.data);
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
     estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
     print("estimateErcTokenGas:$estimateGasString");
@@ -237,7 +240,7 @@ class Web3dart {
     String resultString;
     if (type == BlockChainType.Ethereum) {
       resultString = await mainNetEthClient.sendTransaction(
-          credentials,
+          credentials??await canGetCredentialsHandler(),
           Transaction(
             to: toETHAddress,
             // gasPrice: EtherAmount.inWei(BigInt.one),
@@ -247,7 +250,7 @@ class Web3dart {
           fetchChainIdFromNetworkId: true);
     } else {
       resultString = await eurusEthClient.sendTransaction(
-          credentials,
+          credentials??await canGetCredentialsHandler(),
           Transaction(
             to: toETHAddress,
             value: EtherAmount.inWei(amount),
@@ -273,7 +276,7 @@ class Web3dart {
     print("BigIntamount:$amount");
     Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
     transactionResult = await client.sendTransaction(
-        credentials,
+        credentials??await canGetCredentialsHandler(),
         transaction,
         fetchChainIdFromNetworkId: true);
     print("sendERC20 result:$transactionResult");
@@ -299,7 +302,7 @@ class Web3dart {
       parameters: [toETHAddress, amount],
     );
     transactionResult = await client.sendTransaction(
-        credentials,
+        credentials??await canGetCredentialsHandler(),
         transaction,
         fetchChainIdFromNetworkId: true);
     print("sendERC20 result:$transactionResult");
