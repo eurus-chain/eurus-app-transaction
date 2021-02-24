@@ -1,3 +1,6 @@
+## 0.3.5
+- add canGetPrivateKeyHandler method
+
 ## 0.3.4
 - add getTokenSymbol method
 
