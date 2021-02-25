@@ -1,3 +1,6 @@
+## 0.3.6
+- backend updated smart contract addresses of Rinkeby EurusInternalConfig and Eurus ExternalSmartContractConfig
+
 ## 0.3.5
 - add canGetPrivateKeyHandler method
 
