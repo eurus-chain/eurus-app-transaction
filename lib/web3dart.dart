@@ -88,6 +88,8 @@ class Web3dart {
     ContractFunction transferEvent = deployedContract.function('transfer');
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     Transaction transaction = Transaction.callContract(
+      gasPrice: EtherAmount.inWei(BigInt.from(1500)),
+      maxGas: 100000,
       contract: deployedContract,
       function: transferEvent,
       parameters: [toETHAddress, amount],
@@ -252,6 +254,8 @@ class Web3dart {
       resultString = await eurusEthClient.sendTransaction(
           credentials??await canGetCredentialsHandler(),
           Transaction(
+            gasPrice: EtherAmount.inWei(BigInt.from(1500)),
+            maxGas: 100000,
             to: toETHAddress,
             value: EtherAmount.inWei(amount),
           ),
@@ -297,6 +301,8 @@ class Web3dart {
     ContractFunction transferEvent = deployedContract.function('submitWithdraw');
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     Transaction transaction = Transaction.callContract(
+      gasPrice: EtherAmount.inWei(BigInt.from(1500)),
+      maxGas: 100000,
       contract: deployedContract,
       function: transferEvent,
       parameters: [toETHAddress, amount],
