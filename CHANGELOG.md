@@ -1,3 +1,6 @@
+## 0.3.8
+- update fixed gas Price on testnet
+
 ## 0.3.7
 - update gas Price 
 

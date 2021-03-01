@@ -28,6 +28,8 @@ class Web3dart {
   Map tokenListMap;
   Future<Credentials> Function() get canGetCredentialsHandler => () async => await mainNetEthClient.credentialsFromPrivateKey(await canGetPrivateKeyHandler());
   Future<String> Function() canGetPrivateKeyHandler;
+  int ethereumGasPrice = 200000000000;
+  int eurusGasPrice = 15000;
   /// init method
   Web3dart._internal();
 
@@ -84,11 +86,11 @@ class Web3dart {
   }
 
   /// getTransactionFromCallContract
-  Transaction getTransactionFromCallContract({DeployedContract deployedContract, BigInt amount, String toAddress}){
+  Transaction getTransactionFromCallContract({DeployedContract deployedContract, BigInt amount, String toAddress,BlockChainType blockChainType}){
     ContractFunction transferEvent = deployedContract.function('transfer');
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     Transaction transaction = Transaction.callContract(
-      gasPrice: EtherAmount.inWei(BigInt.from(1500)),
+      gasPrice: EtherAmount.inWei(BigInt.from(blockChainType == BlockChainType.Ethereum ? ethereumGasPrice : eurusGasPrice)),
       maxGas: 100000,
       contract: deployedContract,
       function: transferEvent,
@@ -100,7 +102,7 @@ class Web3dart {
   /// estimateErcTokenGas
   Future<String> estimateErcTokenGas({DeployedContract deployedContract,BlockChainType blockChainType, BigInt amount, String toAddress}) async {
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
-    Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
+    Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress,blockChainType: blockChainType);
     BigInt estimateGas = await client.estimateGas(sender: myEthereumAddress, to: EthereumAddress.fromHex(toAddress), data: transaction.data);
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
     estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
@@ -245,8 +247,8 @@ class Web3dart {
           credentials??await canGetCredentialsHandler(),
           Transaction(
             to: toETHAddress,
-            // gasPrice: EtherAmount.inWei(BigInt.one),
-            // maxGas: 100000,
+            gasPrice: EtherAmount.inWei(BigInt.from(ethereumGasPrice)),
+            maxGas: 100000,
             value: EtherAmount.inWei(amount),
           ),
           fetchChainIdFromNetworkId: true);
@@ -254,7 +256,7 @@ class Web3dart {
       resultString = await eurusEthClient.sendTransaction(
           credentials??await canGetCredentialsHandler(),
           Transaction(
-            gasPrice: EtherAmount.inWei(BigInt.from(1500)),
+            gasPrice: EtherAmount.inWei(BigInt.from(eurusGasPrice)),
             maxGas: 100000,
             to: toETHAddress,
             value: EtherAmount.inWei(amount),
@@ -278,7 +280,7 @@ class Web3dart {
     String decimalsString = "1".padRight(decimalsBalance.toInt()+1,"0");
     BigInt amount = BigInt.from(double.parse(decimalsString) * enterAmount);
     print("BigIntamount:$amount");
-    Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress);
+    Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress,blockChainType: blockChainType);
     transactionResult = await client.sendTransaction(
         credentials??await canGetCredentialsHandler(),
         transaction,
@@ -301,7 +303,7 @@ class Web3dart {
     ContractFunction transferEvent = deployedContract.function('submitWithdraw');
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     Transaction transaction = Transaction.callContract(
-      gasPrice: EtherAmount.inWei(BigInt.from(1500)),
+      gasPrice: EtherAmount.inWei(BigInt.from(ethereumGasPrice)),
       maxGas: 100000,
       contract: deployedContract,
       function: transferEvent,
