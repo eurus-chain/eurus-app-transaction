@@ -304,7 +304,7 @@ class Web3dart {
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     Transaction transaction = Transaction.callContract(
       gasPrice: EtherAmount.inWei(BigInt.from(ethereumGasPrice)),
-      maxGas: 100000,
+      maxGas: 1000000,
       contract: deployedContract,
       function: transferEvent,
       parameters: [toETHAddress, amount],

@@ -1,3 +1,6 @@
+## 0.3.9
+- update submitWithdrawERC20 maxGas
+
 ## 0.3.8
 - update fixed gas Price on testnet
 
