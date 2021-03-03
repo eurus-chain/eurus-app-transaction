@@ -28,8 +28,9 @@ class Web3dart {
   Map tokenListMap;
   Future<Credentials> Function() get canGetCredentialsHandler => () async => await mainNetEthClient.credentialsFromPrivateKey(await canGetPrivateKeyHandler());
   Future<String> Function() canGetPrivateKeyHandler;
-  int ethereumGasPrice = 200000000000;
-  int eurusGasPrice = 15000;
+  double ethereumGasPrice = 200000000000;
+  double eurusGasPrice = 15000;
+  double transactionSpeed = 1;
   /// init method
   Web3dart._internal();
 
@@ -80,7 +81,7 @@ class Web3dart {
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     BigInt estimateGas = await client.estimateGas(to: EthereumAddress.fromHex(toAddress),value: EtherAmount.inWei(amount));
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
-    estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
+    estimateGasString = etherAmount.getValueInUnit(EtherUnit.wei).toString();
     print("estimateGas:$estimateGasString");
     return estimateGasString;
   }
@@ -90,7 +91,7 @@ class Web3dart {
     ContractFunction transferEvent = deployedContract.function('transfer');
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     Transaction transaction = Transaction.callContract(
-      gasPrice: EtherAmount.inWei(BigInt.from(blockChainType == BlockChainType.Ethereum ? ethereumGasPrice : eurusGasPrice)),
+      gasPrice: getGasPrice(blockChainType: blockChainType),
       maxGas: 100000,
       contract: deployedContract,
       function: transferEvent,
@@ -104,8 +105,10 @@ class Web3dart {
     Web3Client client = blockChainType == BlockChainType.Ethereum ? web3dart.mainNetEthClient : web3dart.eurusEthClient;
     Transaction transaction = getTransactionFromCallContract(deployedContract: deployedContract,amount: amount,toAddress: toAddress,blockChainType: blockChainType);
     BigInt estimateGas = await client.estimateGas(sender: myEthereumAddress, to: EthereumAddress.fromHex(toAddress), data: transaction.data);
+    double fetchChainIdFromNetworkIdFee = blockChainType == BlockChainType.Ethereum ? 1.76 : 1.63;
+    estimateGas = BigInt.from(estimateGas.toDouble() * fetchChainIdFromNetworkIdFee);
     EtherAmount etherAmount =  EtherAmount.inWei(estimateGas);
-    estimateGasString = etherAmount.getValueInUnit(EtherUnit.gwei).toStringAsFixed(8);
+    estimateGasString = etherAmount.getValueInUnit(EtherUnit.wei).toString();
     print("estimateErcTokenGas:$estimateGasString");
     return estimateGasString;
   }
@@ -236,6 +239,10 @@ class Web3dart {
     return tokenName;
   }
 
+  EtherAmount getGasPrice({BlockChainType blockChainType}){
+    return EtherAmount.inWei(BigInt.from((blockChainType == BlockChainType.Ethereum ? ethereumGasPrice : eurusGasPrice ) * transactionSpeed));
+  }
+
   /// sendETH
   Future<String> sendETH(
       {double enterAmount, String toAddress, BlockChainType type}) async {
@@ -247,7 +254,7 @@ class Web3dart {
           credentials??await canGetCredentialsHandler(),
           Transaction(
             to: toETHAddress,
-            gasPrice: EtherAmount.inWei(BigInt.from(ethereumGasPrice)),
+            gasPrice: getGasPrice(blockChainType: type),
             maxGas: 100000,
             value: EtherAmount.inWei(amount),
           ),
@@ -256,7 +263,7 @@ class Web3dart {
       resultString = await eurusEthClient.sendTransaction(
           credentials??await canGetCredentialsHandler(),
           Transaction(
-            gasPrice: EtherAmount.inWei(BigInt.from(eurusGasPrice)),
+            gasPrice: getGasPrice(blockChainType: type),
             maxGas: 100000,
             to: toETHAddress,
             value: EtherAmount.inWei(amount),
@@ -303,7 +310,7 @@ class Web3dart {
     ContractFunction transferEvent = deployedContract.function('submitWithdraw');
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
     Transaction transaction = Transaction.callContract(
-      gasPrice: EtherAmount.inWei(BigInt.from(ethereumGasPrice)),
+      gasPrice: getGasPrice(blockChainType: BlockChainType.Eurus),
       maxGas: 1000000,
       contract: deployedContract,
       function: transferEvent,

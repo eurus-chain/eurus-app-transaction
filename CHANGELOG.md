@@ -1,5 +1,6 @@
-## 0.3.9
-- update submitWithdrawERC20 maxGas
+## 0.4.0
+- estimatenErc20Gas to more accurate
+- low medium fast  transaction speed function implementation
 
 ## 0.3.8
 - update fixed gas Price on testnet
