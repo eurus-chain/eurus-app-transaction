@@ -13,6 +13,7 @@ class Web3dart {
   Web3Client eurusEthClient;
   Web3Client mainNetEthClient;
   Credentials credentials;
+  String rinkebyRpcUrl = "http://13.212.253.186:8545";
   String rpcUrl = "http://13.228.80.104:8545";
   int chainId = 18;
   EthereumAddress myEthereumAddress;
@@ -40,9 +41,7 @@ class Web3dart {
 
   /// initEthClient
   Future<bool> initEthClient({String privateKey, String publicAddress, Future<String> Function() canGetPrivateKeyHandler}) async {
-    mainNetEthClient = new Web3Client(
-        'https://rinkeby.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565',
-        httpClient);
+    mainNetEthClient = new Web3Client(rinkebyRpcUrl, httpClient);
     eurusEthClient = new Web3Client(rpcUrl, Client());
     credentials = privateKey != null ? await mainNetEthClient.credentialsFromPrivateKey(privateKey) : null;
     myEthereumAddress = publicAddress != null ? EthereumAddress.fromHex(publicAddress) : credentials != null ? await credentials.extractAddress() : null;

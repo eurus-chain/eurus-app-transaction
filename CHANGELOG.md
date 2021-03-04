@@ -1,3 +1,6 @@
+## 0.4.1
+- update rinkebyRpc url
+
 ## 0.4.0
 - estimatenErc20Gas to more accurate
 - low medium fast  transaction speed function implementation
