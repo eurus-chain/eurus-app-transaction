@@ -13,7 +13,7 @@ class Web3dart {
   Web3Client eurusEthClient;
   Web3Client mainNetEthClient;
   Credentials credentials;
-  String rinkebyRpcUrl = "http://13.212.253.186:8545";
+  String rinkebyRpcUrl = "https://rinkeby.infura.io/v3/fa89761e51884ca48dce5c0b6cfef565";
   String rpcUrl = "http://13.228.80.104:8545";
   int chainId = 18;
   EthereumAddress myEthereumAddress;
