@@ -1,3 +1,6 @@
+## 0.4.2
+- back to use infura rinkeby rpc
+
 ## 0.4.1
 - update rinkebyRpc url
 
