@@ -1,3 +1,6 @@
+## 0.4.3
+- update eurus to dev env
+
 ## 0.4.2
 - back to use infura rinkeby rpc
 
