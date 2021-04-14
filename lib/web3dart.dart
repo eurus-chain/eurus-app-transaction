@@ -25,7 +25,7 @@ class Web3dart {
   String lastTxId;
   DeployedContract erc20ContractFromEthereum;
   DeployedContract erc20ContractFromEurus;
-  List<dynamic> tokenList = new List<dynamic>();
+  List<dynamic> tokenList = new List<dynamic>.empty();
   Map tokenListMap;
   Future<Credentials> Function() get canGetCredentialsHandler => () async => await mainNetEthClient.credentialsFromPrivateKey(await canGetPrivateKeyHandler());
   Future<String> Function() canGetPrivateKeyHandler;
