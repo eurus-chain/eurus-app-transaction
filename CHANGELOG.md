@@ -1,3 +1,6 @@
+## 0.4.4
+- fix some bug
+
 ## 0.4.3
 - update eurus to dev env
 
