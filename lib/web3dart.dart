@@ -64,13 +64,17 @@ class Web3dart {
   }
 
   /// getBalance
-  Future<bool> getBalance() async {
-    web3dart.erc20TokenBalanceFromEthereum = await web3dart.getERC20Balance(blockChainType: BlockChainType.Ethereum,
-        deployedContract: web3dart.erc20ContractFromEthereum);
-    web3dart.ethBalanceFromEthereum = await web3dart.getETHBalance(blockChainType: BlockChainType.Ethereum);
-    web3dart.erc20TokenBalanceFromEurus =  await web3dart.getERC20Balance(blockChainType: BlockChainType.Eurus,
-        deployedContract: web3dart.erc20ContractFromEurus);
-    web3dart.ethBalanceFromEurus = await web3dart.getETHBalance(blockChainType: BlockChainType.Eurus);
+  Future<bool> getErc20Balance({BlockChainType type}) async {
+    if(type == BlockChainType.Ethereum){
+      web3dart.erc20TokenBalanceFromEthereum = await web3dart.getERC20Balance(blockChainType: BlockChainType.Ethereum,
+          deployedContract: web3dart.erc20ContractFromEthereum);
+      web3dart.ethBalanceFromEthereum = await web3dart.getETHBalance(blockChainType: BlockChainType.Ethereum);
+    }
+    if(type == BlockChainType.Eurus){
+      web3dart.erc20TokenBalanceFromEurus =  await web3dart.getERC20Balance(blockChainType: BlockChainType.Eurus,
+          deployedContract: web3dart.erc20ContractFromEurus);
+      web3dart.ethBalanceFromEurus = await web3dart.getETHBalance(blockChainType: BlockChainType.Eurus);
+    }
     return true;
   }
 
