@@ -1082,12 +1082,14 @@ class Web3dart {
   Future<String> submitWithdrawERC20(
       {DeployedContract deployedContract,
         double enterAmount,
+        double enterAmountWithFee,
         String toAddress}) async {
     String transactionResult;
     Web3Client client = web3dart.eurusEthClient;
     BigInt decimalsBalance = await getContractDecimal(deployedContract: deployedContract,blockChainType: BlockChainType.Eurus);
     String decimalsString = "1".padRight(decimalsBalance.toInt()+1,"0");
     BigInt amount = BigInt.from(double.parse(decimalsString) * enterAmount);
+    BigInt amountWithFee = BigInt.from(double.parse(decimalsString) * enterAmountWithFee);
     print("BigIntamount:$amount");
     ContractFunction transferEvent = deployedContract.function('submitWithdraw');
     EthereumAddress toETHAddress = EthereumAddress.fromHex(toAddress);
@@ -1096,7 +1098,7 @@ class Web3dart {
       maxGas: 1000000,
       contract: deployedContract,
       function: transferEvent,
-      parameters: [toETHAddress, amount],
+      parameters: [toETHAddress, amount,amountWithFee],
     );
     transactionResult = await client.sendTransaction(
         credentials??await canGetCredentialsHandler(),
