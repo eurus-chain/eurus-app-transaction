@@ -8,15 +8,15 @@ class LoggingClient extends BaseClient {
   @override
   Future<StreamedResponse> send(BaseRequest request) async {
     if (request is Request) {
-      print('sending ${request.url} with ${request.body}');
+      // print('sending ${request.url} with ${request.body}');
     } else {
-      print('sending ${request.url}');
+      // print('sending ${request.url}');
     }
 
     final response = await _inner.send(request);
     final read = await Response.fromStream(response);
 
-    print('response:\n${read.body}');
+    // print('response:\n${read.body}');
 
     return StreamedResponse(
         Stream.fromIterable([read.bodyBytes]), response.statusCode);
