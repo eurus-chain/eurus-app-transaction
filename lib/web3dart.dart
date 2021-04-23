@@ -32,7 +32,7 @@ class Web3dart {
   Future<Credentials> Function() get canGetCredentialsHandler => () async => await mainNetEthClient.credentialsFromPrivateKey(await canGetPrivateKeyHandler());
   Future<String> Function() canGetPrivateKeyHandler;
   double ethereumGasPrice = 200000000000;
-  double eurusGasPrice = 1500000000000;
+  double eurusGasPrice = 15000;
   double transactionSpeed = 1;
   /// init method
   Web3dart._internal();
