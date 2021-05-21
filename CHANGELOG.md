@@ -1,3 +1,7 @@
+## 0.4.8
+- add transferRequest method
+- add EnvType Dev,Staging,Testing
+
 ## 0.4.7
 - fix some bug
 
