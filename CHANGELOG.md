@@ -1,3 +1,6 @@
+## 0.4.9
+- update flutter version to 2.2.3
+
 ## 0.4.8
 - add transferRequest method
 - add EnvType Dev,Staging,Testing
