@@ -1,11 +1,10 @@
 name: transaction
 description: Dart library to connect to Ethereum clients. Send transactions and interact with smart contracts!
-version: 0.4.9
+version: 0.5.0
 homepage: https://www.goldhub.hk
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.20.0"
 
 dependencies:
   flutter:

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/credentials.dart';
 import 'package:web3dart/web3dart.dart';
@@ -110,9 +109,9 @@ class Web3dart {
       if (!isEthOrEun) {
         if (web3dart.erc20ContractFromEthereum != null) {
           web3dart.erc20TokenBalanceFromEthereum =
-          await web3dart.getERC20Balance(
-              blockChainType: BlockChainType.Ethereum,
-              deployedContract: web3dart.erc20ContractFromEthereum!);
+              await web3dart.getERC20Balance(
+                  blockChainType: BlockChainType.Ethereum,
+                  deployedContract: web3dart.erc20ContractFromEthereum!);
         } else {
           return false;
         }
@@ -1071,7 +1070,7 @@ class Web3dart {
         contract: deployedContract, function: getAssetAddress, params: []);
     print("tokenList:$tokenList");
     tokenListMap = new Map();
-    if (tokenList != null && tokenList[0] != null) {
+    if (tokenList.isNotEmpty && tokenList[0] != null) {
       for (var i = 0; i < tokenList[0].length; i++) {
         String tokenName = tokenList[0][i];
         EthereumAddress tokenAddress = tokenList[1][i];
