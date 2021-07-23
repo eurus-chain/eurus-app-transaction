@@ -19,8 +19,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    web3dart.initEthClient(privateKey: 'd1bdc683fbeb9fa0b4ceb26adb39eaffb21b16891ea28e4cf1bc3118fdd39295');
-   // web3dart.getOwnerAddress();
+    web3dart.initEthClient(
+        privateKey:
+            'd1bdc683fbeb9fa0b4ceb26adb39eaffb21b16891ea28e4cf1bc3118fdd39295');
+    // web3dart.getOwnerAddress();
   }
 
   Future<void> _incrementCounter() async {
@@ -35,8 +37,18 @@ class _MyAppState extends State<MyApp> {
     // String estimateGas = await web3dart.estimateGas(toAddress: '0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',amount: BigInt.from(100000000000000),blockChainType: BlockChainType.Ethereum);
     // print("estimateGas:$estimateGas + ETH");
     // web3dart.sendETH(amount: BigInt.from(10000000000000000),toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',type: BlockChainType.Ethereum);
-    web3dart.estimateErcTokenGas(blockChainType: BlockChainType.Ethereum,deployedContract: web3dart.erc20ContractFromEthereum,amount: BigInt.from(100000000000000),toAddress: '0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
-    web3dart.sendERC20(deployedContract: web3dart.erc20ContractFromEthereum,enterAmount: 1,toAddress:'0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',blockChainType: BlockChainType.Ethereum);
+    if (web3dart.erc20ContractFromEthereum != null) {
+      web3dart.estimateErcTokenGas(
+          blockChainType: BlockChainType.Ethereum,
+          deployedContract: web3dart.erc20ContractFromEthereum!,
+          amount: BigInt.from(100000000000000),
+          toAddress: '0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A');
+      web3dart.sendERC20(
+          deployedContract: web3dart.erc20ContractFromEthereum!,
+          enterAmount: 1,
+          toAddress: '0xA3B4dE5E90A18512BD82c1A640AC99b39ef2258A',
+          blockChainType: BlockChainType.Ethereum);
+    }
     // CoinPriceList coinPrice = await transaction.getTopErc20CoinPrice();
     // print("result:$coinPrice");
     setState(() {
